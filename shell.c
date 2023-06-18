@@ -16,7 +16,9 @@ int main(void)
 	char *storage_buff = NULL;
 	char input_command[buff_size];
 	char *argv[] = {input_command, NULL};
-
+	
+	while (1)
+	{
 	if (id == 0)
 	{
 		prompt_str = "$ ";
@@ -30,5 +32,9 @@ int main(void)
 
 		exit(1);
 	}
+	else 
+	{
 	wait(NULL);
+	}
+	}
 }
