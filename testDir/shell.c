@@ -7,12 +7,14 @@
  * main - main shell function
  * Return: 0 on success
  */
-
+int main() 
+{
     pid_t id;
     ssize_t line_length;
     const char *prompt_str = "$ ";
     char *storage_buff = NULL;
     size_t buff_size = BUFF_SIZE;
+    int value;
     
     while (1)
     {
@@ -34,9 +36,17 @@
             break;
         }
         else if (id == 0)
-        {
-            char *argv[] = {storage_buff, NULL};
-            int value = execve(argv[0], argv, NULL);
+       {
+            char *argv[BUFF_SIZE];
+            int argc = 0;
+            char *token = strtok(storage_buff, " \n");
+            while (token != NULL && argc < BUFF_SIZE - 1) {
+                argv[argc++] = token;
+                token = strtok(NULL, " \n");
+            }
+            argv[argc] = NULL;
+
+             value = execvp(argv[0], argv);
             if (value == -1)
                 perror("execve");
             exit(EXIT_FAILURE);
@@ -50,3 +60,4 @@
     free(storage_buff);
     return 0;
 }
+
