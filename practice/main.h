@@ -7,7 +7,6 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/wait.h>
-extern char **environ;
 int prompt_function(void);
 char *main_str(int ac, char **av);
 char *_strcpy(char *dest, char *src);

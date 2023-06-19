@@ -49,7 +49,7 @@ int main(void)
 		}
 		else if (id == 0)
 		{
-			value = execve(argv[0], argv, environ);
+			value = execve(argv[0], argv, NULL);
 			if (value == -1)
 			{
 				perror("Error opening file");
