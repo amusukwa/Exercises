@@ -2,6 +2,7 @@
 #define MAIN_H
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <unistd.h>
 #include <sys/wait.h>
 int prompt_function(void);
