@@ -15,5 +15,4 @@ void print_prompt(const char *str)
 		_putchar(str[i]);
 		i++;
 	}
-	_putchar('\n');
 }
