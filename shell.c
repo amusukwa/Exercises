@@ -4,6 +4,7 @@
  * main - main shell function
  * Return: 0 on success
  */
+extern char **environ;
 
 int main(void)
 {
@@ -37,7 +38,7 @@ int main(void)
 		}
 		else if (id == 0)
 		{
-			value = execve(argv[0], argv, NULL);
+			value = execve(argv[0], argv, environ);
 			free(storage_buff);
 			exit(1);
 		}
