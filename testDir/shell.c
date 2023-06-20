@@ -1,63 +1,86 @@
-#include "main.h"
 #include <string.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "main.h"
 
 #define BUFF_SIZE 1024
 
-/**
- * main - main shell function
- * Return: 0 on success
- */
-int main() 
-{
+extern char **environ;
+
+int main(void) {
     pid_t id;
+    const char *prompt_str;
+    int count, found;
+    size_t buff_size = 1024;
     ssize_t line_length;
-    const char *prompt_str = "$ ";
     char *storage_buff = NULL;
-    size_t buff_size = BUFF_SIZE;
-    int value;
-    
-    while (1)
-    {
+    char input_command[BUFF_SIZE];
+    char *argv[MAX_VALUE];
+    const char *cmd_not_found = "Command not found: ";
+    char *token, *path, *dir, *ptr;
+    char buffer[BUFF_SIZE];
+
+   
+    if (getenv("PATH") == NULL) {
+        setenv("PATH", "/bin", 1);
+    }
+
+    while (1) {
+        count = 0;
+
+        prompt_str = "$ ";
         print_prompt(prompt_str);
-
         line_length = getline(&storage_buff, &buff_size, stdin);
-        if (line_length == -1)
-        {
-            perror("getline");
+        if (line_length == -1) {
+            putchar('\n');
             break;
         }
-        if (strcmp(storage_buff, "exit") == 0)
-            break;
+        strncpy(input_command, storage_buff, sizeof(input_command));
 
-        id = fork();
-        if (id == -1)
-        {
-            perror("fork");
-            break;
+        token = strtok(input_command, " ");
+        while (token != NULL && count < MAX_VALUE - 1) {
+            argv[count++] = token;
+            token = strtok(NULL, " ");
         }
-        else if (id == 0)
-       {
-            char *argv[BUFF_SIZE];
-            int argc = 0;
-            char *token = strtok(storage_buff, " \n");
-            while (token != NULL && argc < BUFF_SIZE - 1) {
-                argv[argc++] = token;
-                token = strtok(NULL, " \n");
+        argv[count] = NULL;
+
+        found = 0;
+        path = getenv("PATH");
+        dir = strtok(path, ":");
+        while (dir != NULL) {
+            strncpy(buffer, dir, sizeof(buffer));
+            strncat(buffer, "/", sizeof(buffer) - strlen(buffer) - 1);
+            strncat(buffer, argv[0], sizeof(buffer) - strlen(buffer) - 1);
+
+            if (access(buffer, X_OK) == 0) {
+                found = 1;
+                id = fork();
+                if (id < 0) {
+                    perror("fork");
+                    exit(1);
+                } else if (id == 0) {
+                    execve(buffer, argv, environ);
+                    perror("execve");
+                    exit(1);
+                } else {
+                    wait(NULL);
+                }
+                break;
             }
-            argv[argc] = NULL;
+            dir = strtok(NULL, ":");
+        }
 
-             value = execvp(argv[0], argv);
-            if (value == -1)
-                perror("execve");
-            exit(EXIT_FAILURE);
+        if (!found) {
+            printf("%s%s\n", cmd_not_found, argv[0]);
         }
-        else
-        {
-            wait(NULL);
-        }
+
+        free(storage_buff);
+        storage_buff = NULL;
     }
 
     free(storage_buff);
     return 0;
 }
+
 
