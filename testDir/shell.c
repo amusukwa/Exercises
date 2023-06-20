@@ -77,7 +77,6 @@ int main(void) {
 	     free(storage_buff);
 	}
 	 free(storage_buff);
-}
     return 0;
 }
 
