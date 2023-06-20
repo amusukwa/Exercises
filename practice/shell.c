@@ -40,6 +40,9 @@ int main(void)
 		}
 		argv[count] = NULL;
 
+		if ((_strcmp(argv[0], "exit")) == 0)
+			exit(0);
+
 		id = fork();
 
 		if (id < 0)
