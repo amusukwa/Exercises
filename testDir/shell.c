@@ -11,20 +11,14 @@ extern char **environ;
 int main(void) {
     pid_t id;
     const char *prompt_str;
-    int count, found;
+    int count;
     size_t buff_size = 1024;
     ssize_t line_length;
+    int value, found;
     char *storage_buff = NULL;
     char input_command[BUFF_SIZE];
     char *argv[MAX_VALUE];
-    const char *cmd_not_found = "Command not found: ";
-    char *token, *path, *dir, *ptr;
-    char buffer[BUFF_SIZE];
-
-   
-    if (getenv("PATH") == NULL) {
-        setenv("PATH", "/bin", 1);
-    }
+    char *token, *path, *dir;
 
     while (1) {
         count = 0;
@@ -36,7 +30,9 @@ int main(void) {
             putchar('\n');
             break;
         }
-        strncpy(input_command, storage_buff, sizeof(input_command));
+        storage_buff[line_length - 1] = '\0';  
+
+        strcpy(input_command, storage_buff);
 
         token = strtok(input_command, " ");
         while (token != NULL && count < MAX_VALUE - 1) {
@@ -46,40 +42,42 @@ int main(void) {
         argv[count] = NULL;
 
         found = 0;
-        path = getenv("PATH");
+       	path = getenv("PATH");
         dir = strtok(path, ":");
-        while (dir != NULL) {
-            strncpy(buffer, dir, sizeof(buffer));
-            strncat(buffer, "/", sizeof(buffer) - strlen(buffer) - 1);
-            strncat(buffer, argv[0], sizeof(buffer) - strlen(buffer) - 1);
+            while (dir != NULL) 
+	    {
 
-            if (access(buffer, X_OK) == 0) {
-                found = 1;
-                id = fork();
-                if (id < 0) {
-                    perror("fork");
-                    exit(1);
-                } else if (id == 0) {
-                    execve(buffer, argv, environ);
-                    perror("execve");
-                    exit(1);
-                } else {
-                    wait(NULL);
+                char buffer[BUFF_SIZE];
+                snprintf(buffer, sizeof(buffer), "%s/%s", dir, argv[0]);
+                if (access(buffer, X_OK) == 0) {
+                    found = 1;
+                    id = fork();
+                    if (id < 0) {
+                        perror("unsuccessful fork");
+                        exit(1);
+                    } else if (id == 0) {
+                        value = execve(buffer, argv, environ);
+                        if (value == -1) {
+                            perror("Error opening file");
+                            exit(1);
+                        }
+                        free(storage_buff);
+                        exit(1);
+                    } else {
+                        wait(NULL);
+                    }
+                    break;
                 }
-                break;
-            }
-            dir = strtok(NULL, ":");
+                dir = strtok(NULL, ":");
+		  }
+	     if (!found)
+	     {
+            printf("Command not found: %s\n", argv[0]);
         }
-
-        if (!found) {
-            printf("%s%s\n", cmd_not_found, argv[0]);
-        }
-
-        free(storage_buff);
-        storage_buff = NULL;
-    }
-
-    free(storage_buff);
+	     free(storage_buff);
+	}
+	 free(storage_buff);
+}
     return 0;
 }
 
