@@ -60,7 +60,7 @@ int main(void)
         else if (id == 0)
         {
             
-            if (is_executable(argv[0]) == 1)
+            if (access(argv[0], X_OK) == 1)
             {
                 value = execve(argv[0], argv, NULL);
             }
