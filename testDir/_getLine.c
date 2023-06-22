@@ -6,7 +6,8 @@
  * my_getline - reads input to stream
  * @lineptr:input line
  * @n:size of buffer
- * @strea:stream
+ * @stream:stream
+ * Return:size of iput stream
  */
 
 ssize_t my_getline(char **lineptr, size_t *n, FILE *stream) 
