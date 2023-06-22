@@ -28,8 +28,8 @@ int main(void)
         count = 0;
 
         prompt_str = "$ ";
-        printf("%s", prompt_str);
-        line_length = getline(&storage_buff, &buff_size, stdin);
+        print_prompt(prompt_str);
+        line_length = my_getline(&storage_buff, &buff_size, stdin);
         if (line_length == -1)
         {
             putchar('\n');
@@ -60,7 +60,7 @@ int main(void)
         else if (id == 0)
         {
             
-            if (access(argv[0], X_OK) == 1)
+            if (access(argv[0], X_OK) == 0)
             {
                 value = execve(argv[0], argv, NULL);
             }

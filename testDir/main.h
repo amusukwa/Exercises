@@ -14,4 +14,5 @@ void print_prompt(const char *str);
 char *_strncat(char *dest, char *src, int n);
 char * _getenv(const char *name);
 int is_executable(const char *filename);
+ssize_t my_getline(char **lineptr, size_t *n, FILE *stream);
 #endif
