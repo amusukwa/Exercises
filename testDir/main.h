@@ -16,4 +16,5 @@ char * _getenv(const char *name);
 int is_executable(const char *filename);
 ssize_t my_getline(char **lineptr, size_t *n, FILE *stream);
 char *mystrtok(char *str, const char *delim);
+int _atoi(char *s);
 #endif
