@@ -21,7 +21,7 @@ int main(void)
         char *path;
         char *path_token;
         char *path_command;
-        int command_flag = 0;
+	int command_flag = 0;
 
         while (1)
         {
@@ -60,7 +60,7 @@ int main(void)
                 if ((_strcmp(argv[0], "exit")) == 0)
                         exit(0);
 
-                if (input_command[0] == '/')
+                if (access(argv[0], X_OK) == 0)
                 {
                         id = fork();
 
@@ -69,7 +69,7 @@ int main(void)
                                 perror("unsuccessful fork");
                                 exit(1);
                         }
-                        else if (id == 0)
+                        else if (id == 0 && (input_command[0] == '/'))
                         {
                                 value = execve(argv[0], argv, environ);
                                 if (value == -1)
@@ -82,26 +82,22 @@ int main(void)
                         }
                         else 
                         {
-                                wait(NULL);
-                        }
-                }
-                else
-                {
+				pid_t id_1 = fork();
                         path = getpath();
                         path_token = strtok(path, ":");
-                        command_flag = 0;
+			command_flag = 0;
                         while (path_token != NULL)
                         {
                                 path_command = str_concat(path_token, argv[0]);
                                 if (access(path_command, X_OK) == 0)
                                 {
-                                         id = fork();
-                                         if (id < 0)
+                                         
+                                         if (id_1 < 0)
                                          {
                                                 perror("unsuccessful fork");
                                                 exit(1);
                                          }
-                                        else if (id == 0)
+                                        else if (id_1 == 0)
                                         {
                                                 value = execve(path_command, argv, environ);
                                                 if (value == -1)
@@ -113,19 +109,19 @@ int main(void)
                                         else
                                         {
                                                 wait(NULL);
-                                                command_flag = 1;
-                                                free(path_command);
-                                                break;
+						wait(NULL);
+						command_flag = 1;
+						free(path_command);
+						break;
                                         }
                                 }
                                 
 
                          path_token = strtok(NULL, ":");
-                        }
-
-                }
+                   }
 
         }
         return (0);
-
+		}
+}
 }
