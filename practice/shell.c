@@ -1,5 +1,61 @@
 #include "main.h"
 #include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#define MAX_PATH_LENGTH 1024
+
+/**
+ * handle_cd - directory
+ * @directory: character input
+ * Return: no return type
+ */
+
+/**
+void handle_cd(const char *directory) {
+    char prev_dir[MAX_PATH_LENGTH];
+    char *new_dir;
+
+    if (directory == NULL || strcmp(directory, " ") == 0 || strcmp(directory, "~") == 0)
+    {
+        new_dir = getenv("HOME");
+    }
+    else if (strcmp(directory, "-") == 0) 
+    {
+        new_dir = prev_dir;
+    }
+    else 
+    {
+        new_dir = (char *)directory;
+    }
+
+    if (new_dir == NULL)
+    {
+        perror("cd failed: Directory not found");
+        return;
+    }
+
+    if (getcwd(prev_dir, sizeof(prev_dir)) == NULL)
+    {
+        perror("getcwd failed");
+        return;
+    }
+
+    if (chdir(new_dir) != 0)
+    {
+        perror("cd failed");
+        return;
+    }
+
+    if (getcwd(prev_dir, sizeof(prev_dir)) == NULL)
+    {
+        perror("getcwd failed");
+        return;
+    }
+
+    setenv("PWD", prev_dir, 1);
+}
+*/
+
 /**
  * main - main shell function
  * Return: 0 on success
@@ -60,37 +116,57 @@ int main(void)
 		if (count == 1)
 		{
                  exit(0);
-               } 
+                } 
 		else if (count == 2)
-	    {
+	       {
                 
                 int exitStatus = _atoi(argv[1]);
                 exit(exitStatus);
-            } 
+               } 
 		else {
                 
                 perror("usage: exit status");
-            	}
+            	 }
 		} 
 	      	if (_strcmp(argv[0], "setenv") == 0)
 		 {
                  if (count == 3)
 		 {
-        	handle_setenv(argv[1], argv[2], 1);
-    		}
-   		 else {
+        	setenv(argv[1], argv[2], 1);
+    		 }
+   		 else 
+		 {
         		perror("setenv failed");
     		}
 
        		 }
-       if (_strcmp(argv[0], "unsetenv") == 0)
-       {
-            if (count == 2) {
-                handle_unsetenv(argv[1]);
-            } else {
-                printf("usage: unsetenv VARIABLE\n");
+          if (_strcmp(argv[0], "unsetenv") == 0)
+           {
+            if (count == 2)
+	    {
+                unsetenv(argv[1]);
+            }
+	    else
+	    {
+                perror("usage: unsetenv VARIABLE");
             }
         }
+
+       if (_strcmp(argv[0], "cd") == 0)
+       {
+    	if (count == 1)
+       	{
+        handle_cd(NULL);
+    	}
+       	else if (count == 2) 
+	{
+        handle_cd(argv[1]);
+    	}
+       	else {
+        perror("usage: cd [directory]");
+   	 }
+  	  continue; 
+	}
                   
 
                 if (input_command[0] == '/')
@@ -140,12 +216,11 @@ int main(void)
                                                 if (value == -1)
                                                 {
                                                         perror("Error opening file");
-                                                        exit(1);
-                                                }
-                                        }
+
+                                       		 }
                                         else
                                         {
- 			                                               wait(NULL);
+ 			                         wait(NULL);
                                                 command_flag = 1;
 						if (path_command != NULL) 
 						{
@@ -153,7 +228,7 @@ int main(void)
 							}
                                                      break;
                                         }
-                                }
+                                     }
                                 
 
                          path_token = strtok(NULL, ":");
@@ -168,5 +243,3 @@ int main(void)
         }
         return (0);
 }
-
-
