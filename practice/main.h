@@ -21,4 +21,6 @@ void print_prompt(const char *str);
 ssize_t my_getline(char **lineptr, size_t *n, FILE *stream);
 char *mystrtok(char *str, const char *delim);
 int _atoi(char *s);
+void handle_setenv(const char *variable, const char *value,int overwrite); 
+void handle_unsetenv(const char *variable); 
 #endif

@@ -9,19 +9,17 @@ int main(void)
 {
         pid_t id;
         const char *prompt_str;
-        int count;i
+        int count;
         size_t buff_size = 1024;
         ssize_t line_length;
-        int value;i
+        int value, command_flag;
         char *storage_buff = NULL;
         char input_command[BUFF_SIZE];
         char *argv[MAX_VALUE];
         char *token;
         char **environment;
         char *path, *path_token;
-        char *path_command;
- 	const char *c, *error_msg; 	
-      int command_flag;
+        char *path_command; 	
 
         while (1)
         {
@@ -57,7 +55,8 @@ int main(void)
                         continue;
                 }
 
-                if ((_strcmp(argv[0], "exit")) == 0){
+                if ((_strcmp(argv[0], "exit")) == 0)
+		{
 		if (count == 1)
 		{
                  exit(0);
@@ -70,9 +69,28 @@ int main(void)
             } 
 		else {
                 
-                printf("usage: exit status");
+                perror("usage: exit status");
             	}
 		} 
+	      	if (_strcmp(argv[0], "setenv") == 0)
+		 {
+                 if (count == 3)
+		 {
+        	handle_setenv(argv[1], argv[2], 1);
+    		}
+   		 else {
+        		perror("setenv failed");
+    		}
+
+       		 }
+       if (_strcmp(argv[0], "unsetenv") == 0)
+       {
+            if (count == 2) {
+                handle_unsetenv(argv[1]);
+            } else {
+                printf("usage: unsetenv VARIABLE\n");
+            }
+        }
                   
 
                 if (input_command[0] == '/')
@@ -142,13 +160,7 @@ int main(void)
                         }
 
 		if (!command_flag)
-		  error_msg = "command not found";
-    		c = error_msg;
-  	  while (*c)
-	 	 {
-        	putchar(*c);
-        	c++;
-    		}	
+			perror("Command not found");
 
                 }
 		
