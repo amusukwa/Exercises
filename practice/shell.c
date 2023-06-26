@@ -4,28 +4,57 @@
 #include <unistd.h>
 
 #define MAX_PATH_LENGTH 1024
+#define UNUSED __attribute__((unused))
 
+void update_pwd_variable(const char *new_directory);
 
-void handle_cd(const char *directory)
-{
-    if (directory == NULL || directory[0] == '\0' || directory[0] == '~')
-    {
-        directory = getenv("HOME");
-        if (directory == NULL)
-        {
+char *get_current_directory() {
+    char *cwd = malloc(MAX_PATH_LENGTH);
+    if (cwd != NULL)
+        getcwd(cwd, MAX_PATH_LENGTH);
+    return cwd;
+}
+
+void update_pwd_variable(const char *new_directory UNUSED) {
+    char *cwd = get_current_directory();
+    if (cwd != NULL) {
+        setenv("PWD", cwd, 1);
+        free(cwd);
+    }
+}
+
+void handle_cd(const char *directory) {
+
+        char *new_directory, *previous_directory;
+
+    if (directory == NULL || directory[0] == '\0' || strcmp(directory, "~") == 0) {
+        new_directory = getenv("HOME");
+        if (new_directory == NULL) {
             fprintf(stderr, "cd: no $HOME directory\n");
             return;
         }
+    } else if (strcmp(directory, "-") == 0) {
+        new_directory = getenv("OLDPWD");
+        if (new_directory == NULL) {
+            fprintf(stderr, "cd: no previous directory\n");
+            return;
+        }
+        printf("%s\n", new_directory);
+    } else {
+        new_directory = (char *)directory;
     }
 
-    if (chdir(directory) != 0)
-    {
-        perror("cd failed");
-        return;
+    previous_directory = get_current_directory();
+    if (previous_directory != NULL) {
+        if (chdir(new_directory) == 0) {
+            setenv("OLDPWD", previous_directory, 1);
+            update_pwd_variable(new_directory);
+        } else {
+            perror("cd failed");
+        }
+        free(previous_directory);
     }
-}                 
-
-
+}
 
 int main(void)
 {
@@ -57,11 +86,11 @@ int main(void)
 		}
 		_strcpy(input_command, storage_buff);
 
-		token = strtok(input_command, "; ");
+		token = strtok(input_command, " ");
 		while (token != NULL && count < MAX_VALUE - 1)
 		{
 			argv[count++] = token;
-			token = strtok(NULL, " ; ");
+			token = strtok(NULL, " ");
 		}
 		argv[count] = NULL;
 
@@ -99,7 +128,6 @@ int main(void)
 			if (count == 3)
 			{
 				setenv(argv[1], argv[2], 1);
-				 
 			}
 			else
 			{
@@ -124,12 +152,10 @@ int main(void)
 			if (count == 1)
 			{
 				handle_cd(NULL);
-				printf("error");
 			}
 			else if (count == 2)
 			{
-				chdir("path/to/directory");
-				printf("error 2");
+				handle_cd(argv[1]);
 			}
 			else
 			{
@@ -137,8 +163,6 @@ int main(void)
 			}
 			continue;
 		}
-
-
 
 		if (input_command[0] == '/')
 		{
@@ -167,7 +191,7 @@ int main(void)
 		else
 		{
 			path = getpath();
-			path_token = strtok(path, ";");
+			path_token = strtok(path, ":");
 			command_flag = 0;
 			while (path_token != NULL)
 			{
@@ -182,7 +206,6 @@ int main(void)
 					}
 					else if (id == 0)
 					{
-
 						value = execve(path_command, argv, environ);
 						if (value == -1)
 						{
@@ -209,4 +232,5 @@ int main(void)
 
 	return (0);
 }
+
 

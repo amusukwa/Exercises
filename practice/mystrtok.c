@@ -31,35 +31,25 @@ return ('\0');
 * Return:size of iput stream
 */
 
+char *mystrtok(char *str, const char *delim) {
+    static char *token;
+    static char *nextToken;
+    char *result;
 
-char *mystrtok(char *str, const char *delim)
-{
-static char *token;
-static char *nextToken;
-char *result;
+    if (str != NULL) {
+        token = str;
+    }
 
-if (str != NULL)
-{ 
-token = str;
-}
 
-if (token == NULL)
-{
-token = str;
-}
+    result = token;
+    nextToken = _strpbrk(token, delim);
 
-result = token;
-nextToken = _strpbrk(token, delim);
-
-if (nextToken != NULL)
-{
-*nextToken = '\0';
-token = nextToken + 1;
-}
-else
-{
-token = NULL;
-}
+    if (nextToken != NULL) {
+        *nextToken = '\0';
+        token = nextToken + 1;
+    } else {
+        token = NULL;
+    }
 
     return result;
 }

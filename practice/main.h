@@ -24,4 +24,5 @@ int _atoi(char *s);
 void handle_cd(const char *directory); 
 void handle_setenv(const char *variable, const char *value,int overwrite); 
 void handle_unsetenv(const char *variable); 
+void replace_variables(char *command, int status, pid_t pid);
 #endif
