@@ -152,7 +152,7 @@ int main(void)
             else
             {
                 wait(NULL);
-		if (wait == -1)
+		if (wait == NULL)
 		{
 			perror("wait");
 			exit(98);
@@ -185,7 +185,7 @@ int main(void)
                                          else
                                          {
                                                  wait(NULL);
-						 if (wait == -1)
+						 if (wait == NULL)
                 				{
                         				perror("wait");
                         				exit(98);
