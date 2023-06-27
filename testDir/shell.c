@@ -17,11 +17,12 @@ int main(void)
     int count;
     size_t buff_size = 1024;
     ssize_t line_length;
-    int value;
+    int value, exitStatus;
     char *storage_buff = NULL;
     char input_command[BUFF_SIZE];
     char *argv[MAX_VALUE];
     char *token, *path, *dir;
+    const char *exit_str;
 
     while (1)
     {
@@ -39,17 +40,30 @@ int main(void)
 
         strcpy(input_command, storage_buff);
 
-        token = strtok(input_command, " ");
+        token = mystrtok(input_command, " ");
         while (token != NULL && count < MAX_VALUE - 1)
         {
             argv[count++] = token;
-            token = strtok(NULL, " ");
+            token = mystrtok(NULL, " ");
         }
         argv[count] = NULL;
 
         if (strcmp(argv[0], "exit") == 0)
-            exit(0);
-
+	{
+	 if (count == 1) 
+	 {
+                exit(0);
+            } else if (count == 2) 
+	    {
+               
+                exitStatus = _atoi(argv[1]);
+                exit(exitStatus);
+            } else 
+	    {
+                exit_str = "usage: exit [status]";
+                print_prompt(exit_str);
+            }
+	}
         id = fork();
 
         if (id < 0)
@@ -71,7 +85,7 @@ int main(void)
                 if (path != NULL)
                 {
                     
-                    dir = strtok(path, ":");
+                    dir = mystrtok(path, ":");
                     while (dir != NULL)
                     {
                         
