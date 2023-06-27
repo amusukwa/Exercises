@@ -54,6 +54,10 @@ if (ch == '\n')
 break;
 }
 }
+ if (line_length == 1 && ch != '\n')
+    {
+        return (0);
+    }
 (*lineptr)[line_length] = '\0';
 return ((line_length > 1 || ch == '\n') ? line_length : -1);
 }

@@ -36,9 +36,15 @@ int main(void)
         line_length = my_getline(&storage_buff, &buff_size, stdin);
         if (line_length == -1)
         {
+		perror("input");
             _putchar('\n');
             break;
         }
+	if (line_length == 1)
+	{
+		perror("Empty input");
+		continue;
+	}
         _strcpy(input_command, storage_buff);
 
 	if (input_command == NULL)
