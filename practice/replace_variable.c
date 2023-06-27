@@ -73,11 +73,12 @@ void replace_variables(char *command, int status, pid_t pid)
     free(formatted);
 }
 
-/**
+
  * handle_command - handles command
  * @command:input char
  * Return:no return type
  */
+/**
 void handle_command(char *command) {
     
     if (needs_variable_replacement(command)) {
