@@ -15,7 +15,7 @@ int main(void)
         char **environment;
         char *path;
         char *path_token;
-        char *path_command[];
+        char *path_command;
         int path_index = 0;
         char *path_array[MAX_VALUE];
 
@@ -116,7 +116,7 @@ int main(void)
                        for (int x = 0; x < path_index; x++)
 		       {
 			       path_command = str_concat(path_array[x], argv[0]);
-			       if (access(path_command[y], X_OK) == 0)
+			       if (access(path_command, X_OK) == 0)
 			       {
 				       id_1 = fork();
                                          if (id_1 < 0)
@@ -138,6 +138,7 @@ int main(void)
 					 {
 						 wait(NULL);
 					 }
+					
 					 free(path_command);
 					 break;
 		    }
