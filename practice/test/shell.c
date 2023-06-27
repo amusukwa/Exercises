@@ -8,57 +8,75 @@
 
 void update_pwd_variable(const char *new_directory);
 
-char *get_current_directory() {
+char *get_current_directory(void)
+{
     char *cwd = malloc(MAX_PATH_LENGTH);
     if (cwd != NULL)
         getcwd(cwd, MAX_PATH_LENGTH);
     return cwd;
 }
 
-void update_pwd_variable(const char *new_directory UNUSED) {
+void update_pwd_variable(const char *new_directory UNUSED)
+{
     char *cwd = get_current_directory();
-    if (cwd != NULL) {
+    if (cwd != NULL)
+    {
         setenv("PWD", cwd, 1);
         free(cwd);
     }
 }
 
-void handle_cd(const char *directory) {
+void handle_cd(const char *directory)
+{
+    char *new_directory, *previous_directory;
 
-        char *new_directory, *previous_directory;
-
-    if (directory == NULL || directory[0] == '\0' || strcmp(directory, "~") == 0) {
+    if (directory == NULL || directory[0] == '\0' || strcmp(directory, "~") == 0)
+    {
         new_directory = getenv("HOME");
-        if (new_directory == NULL) {
-            fprintf(stderr, "cd: no $HOME directory\n");
+        if (new_directory == NULL)
+        {
+            perror("cd: no $HOME directory");
             return;
         }
-    } else if (strcmp(directory, "-") == 0) {
+    }
+    else if (strcmp(directory, "-") == 0)
+    {
         new_directory = getenv("OLDPWD");
-        if (new_directory == NULL) {
-            fprintf(stderr, "cd: no previous directory\n");
+        if (new_directory == NULL)
+        {
+            perror("cd: no previous directory");
             return;
         }
-        printf("%s\n", new_directory);
-    } else {
+        _putchar('\n');
+        _puts(new_directory);
+       _putchar('\n');
+    }
+    else
+    {
         new_directory = (char *)directory;
     }
 
     previous_directory = get_current_directory();
-    if (previous_directory != NULL) {
-        if (chdir(new_directory) == 0) {
+    if (previous_directory != NULL)
+    {
+        if (chdir(new_directory) == 0)
+        {
             setenv("OLDPWD", previous_directory, 1);
             update_pwd_variable(new_directory);
-        } else {
+        }
+        else
+        {
             perror("cd failed");
         }
         free(previous_directory);
     }
+   
 }
 
 int main(void)
 {
-<<<<<<< HEAD:practice/test/shell.c
+
+           /
         pid_t id;
         const char *prompt_str;
         int count;
@@ -366,6 +384,9 @@ int main(void)
 	}
 
 	return (0);
+>>>>>>> 2353fb74eee39e45b23405557f7ed981548f687a:practice/test/shell.c
 }
+
+
 
 
