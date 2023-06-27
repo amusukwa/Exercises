@@ -2,11 +2,12 @@
 int main(void)
 {
         pid_t id;
+	pid_t id_1;
         const char *prompt_str;
         int count;
         size_t buff_size = 1024;
         ssize_t line_length;
-        int value;
+        int value, value_1;
         char *storage_buff = NULL;
         char input_command[BUFF_SIZE];
         char *argv[MAX_VALUE];
@@ -14,7 +15,7 @@ int main(void)
         char **environment;
         char *path;
         char *path_token;
-        char *path_command;
+        char *path_command[];
         int path_index = 0;
         char *path_array[MAX_VALUE];
 
@@ -43,7 +44,6 @@ int main(void)
                 //path tokenizer
                         path = getpath();
                         path_token = strtok(path, ":");
-                        path_index = 0;
                         while (path_token != NULL)
                         {
                                 path_array[path_index] = path_token;
@@ -73,20 +73,6 @@ int main(void)
                 if ((_strcmp(argv[0], "exit")) == 0)
                         exit(0);
 
-        //      if ((_strcmp(argv[0], "cd")) == 0)
-        //      {
-        //              if (count == 0)
-        //              {
-        //                      chdir(gethome());
-        //              }
-        //              if (count == 1)
-        //              {
-        //                      chdir(argv[1]);
-        //              }
-        //              if (count > 2)
-        //                      perror("cd");
-        //              continue;
-                //}
                 //end of built in commands
 
                 //path specified commands
@@ -124,11 +110,44 @@ int main(void)
                         continue;
                 }
                 }//end of path specified commands
+
                 if (input_command[0] != '/')
                 {
-                        for (int i = 0; i < path_index; i++)
-                                printf("%s\n", path_array[i]);
-                }
+                       for (int x = 0; x < path_index; x++)
+		       {
+			       path_command = str_concat(path_array[x], argv[0]);
+			       if (access(path_command[y], X_OK) == 0)
+			       {
+				       id_1 = fork();
+                                         if (id_1 < 0)
+                                         {
+                                                perror("unsuccessful fork");
+                                                exit(1);
+                                         }
+                                        else if (id_1 == 0)
+                                        {
+						printf("%s\n", path_command);
+                                                value_1 = execve(path_command, argv, environ);
+                                                if (value_1 == -1)
+                                                {
+                                                        perror("Error opening file");
+                                                        exit(1);
+                                           	}
+			       		}
+					 else
+					 {
+						 wait(NULL);
+					 }
+					 free(path_command);
+					 break;
+		    }
+			    }
+                
+		       if (access(path_command, X_OK) == -1)
+		       {
+			       perror("Command not found");
+		       }
+		}
 
                 }//while loop closing brace
 
