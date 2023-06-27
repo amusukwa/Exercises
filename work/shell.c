@@ -125,8 +125,7 @@ int main(void)
                                                 exit(1);
                                          }
                                         else if (id_1 == 0)
-                                        {
-						printf("%s\n", path_command);
+                                     {
                                                 value_1 = execve(path_command, argv, environ);
                                                 if (value_1 == -1)
                                                 {
@@ -144,10 +143,7 @@ int main(void)
 		    }
 			    }
                 
-		       if (access(path_command, X_OK) == -1)
-		       {
-			       perror("Command not found");
-		       }
+		 
 		}
 
                 }//while loop closing brace
