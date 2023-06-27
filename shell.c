@@ -164,11 +164,6 @@ int main(void)
             else
             {
                 wait(NULL);
-		if (wait == NULL)
-		{
-			perror("wait");
-			exit(98);
-		}
             }
         }
 	
@@ -197,11 +192,6 @@ int main(void)
                                          else
                                          {
                                                  wait(NULL);
-						 if (wait == NULL)
-                				{
-                        				perror("wait");
-                        				exit(98);
-                				}
                                          }
 
                                          free(path_command);
