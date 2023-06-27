@@ -41,6 +41,12 @@ int main(void)
         }
         _strcpy(input_command, storage_buff);
 
+	if (input_command == NULL)
+	{
+		perror("No command found");
+		exit(98);
+	}
+
         token = strtok(input_command, " ");
         while (token != NULL && count < MAX_VALUE - 1)
         {
