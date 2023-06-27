@@ -3,83 +3,19 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define MAX_PATH_LENGTH 1024
-#define UNUSED __attribute__((unused))
-
-void update_pwd_variable(const char *new_directory);
-
-char *get_current_directory(void)
-{
-    char *cwd = malloc(MAX_PATH_LENGTH);
-    if (cwd != NULL)
-        getcwd(cwd, MAX_PATH_LENGTH);
-    return cwd;
-}
-
-void update_pwd_variable(const char *new_directory UNUSED)
-{
-    char *cwd = get_current_directory();
-    if (cwd != NULL)
-    {
-        setenv("PWD", cwd, 1);
-        free(cwd);
-    }
-}
-
-void handle_cd(const char *directory)
-{
-    char *new_directory, *previous_directory;
-
-    if (directory == NULL || directory[0] == '\0' || strcmp(directory, "~") == 0)
-    {
-        new_directory = getenv("HOME");
-        if (new_directory == NULL)
-        {
-            perror("cd: no $HOME directory");
-            return;
-        }
-    }
-    else if (strcmp(directory, "-") == 0)
-    {
-        new_directory = getenv("OLDPWD");
-        if (new_directory == NULL)
-        {
-            perror("cd: no previous directory");
-            return;
-        }
-        _putchar('\n');
-        _puts(new_directory);
-        _putchar('\n');
-    }
-    else
-    {
-        new_directory = (char *)directory;
-    }
-
-    previous_directory = get_current_directory();
-    if (previous_directory != NULL)
-    {
-        if (chdir(new_directory) == 0)
-        {
-            setenv("OLDPWD", previous_directory, 1);
-            update_pwd_variable(new_directory);
-        }
-        else
-        {
-            perror("cd failed");
-        }
-        free(previous_directory);
-    }
-}
-
+/**
+ * main - simple shell function
+ * Return: 0 on success
+ */
 int main(void)
 {
     pid_t id;
+    pid_t id_1;
     const char *prompt_str;
     int count;
     size_t buff_size = 1024;
     ssize_t line_length;
-    int value, command_flag;
+    int value, command_flag, value_1;
     char *storage_buff = NULL;
     char input_command[BUFF_SIZE];
     char *argv[MAX_VALUE];
@@ -87,6 +23,9 @@ int main(void)
     char **environment;
     char *path, *path_token;
     char *path_command;
+    int path_index = 0;
+    char *path_array[MAX_VALUE];
+
 
     while (1)
     {
@@ -109,6 +48,19 @@ int main(void)
             token = strtok(NULL, " ");
         }
         argv[count] = NULL;
+
+	path = getpath();
+                        path_token = strtok(path, ":");
+                        while (path_token != NULL)
+                        {
+                                path_array[path_index] = path_token;
+                                path_index++;
+                                path_token = strtok(NULL, ":");
+                        }
+                        path_array[path_index] = NULL;
+
+
+	//start of built in commands
 
         if ((_strcmp(argv[0], "env")) == 0)
         {
@@ -179,7 +131,9 @@ int main(void)
             }
             continue;
         }
-
+	//nd of built in commands
+	
+//start of path specified commands
         if (input_command[0] == '/')
         {
             id = fork();
@@ -204,47 +158,48 @@ int main(void)
                 wait(NULL);
             }
         }
-        else
-        {
-            path = getpath();
-            path_token = strtok(path, ":");
-            command_flag = 0;
-            while (path_token != NULL)
-            {
-                path_command = str_concat(path_token, argv[0]);
-                if (access(path_command, X_OK) == 0)
+	//end of path specified commands
+        if (input_command[0] != '/')
                 {
-                    id = fork();
-                    if (id < 0)
-                    {
-                        perror("unsuccessful fork");
-                        exit(1);
+                       for (int x = 0; x < path_index; x++)
+                       {
+                               path_command = str_concat(path_array[x], argv[0]);
+                               if (access(path_command, X_OK) == 0)
+                               {
+                                       id_1 = fork();
+                                         if (id_1 < 0)
+                                         {
+                                                perror("unsuccessful fork");
+                                                exit(1);
+                                         }
+                                        else if (id_1 == 0)
+                                     {
+                                                value_1 = execve(path_command, argv, environ);
+                                                if (value_1 == -1)
+                                                {
+                                                        perror("Error opening file");
+                                                        exit(1);
+                                                }
+                                        }
+                                         else
+                                         {
+                                                 wait(NULL);
+                                         }
+
+                                         free(path_command);
+                                         break;
                     }
-                    else if (id == 0)
-                    {
-                        value = execve(path_command, argv, environ);
-                        if (value == -1)
-                        {
-                            perror("Error opening file");
-                        }
-                        free(path_command);
-                        exit(1);
-                    }
-                    else
-                    {
-                        wait(NULL);
-                        command_flag = 1;
-                        break;
-                    }
+                            }
+                
+                 
                 }
-                free(path_command);
-                path_token = strtok(NULL, ":");
-            }
+ 
+	    //end of no path
 
             if (!command_flag)
                 perror("Command not found");
-        }
-    }
+        
+    }//while loop
 
     return (0);
 }
