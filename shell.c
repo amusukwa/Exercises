@@ -106,6 +106,12 @@ int main(void)
         }
         _strcpy(input_command, storage_buff);
 
+	if (input_command == NULL)
+	{
+		perror("No command found");
+		exit(98);
+	}
+
         token = strtok(input_command, " ");
         while (token != NULL && count < MAX_VALUE - 1)
         {
@@ -217,6 +223,11 @@ int main(void)
             else
             {
                 wait(NULL);
+		if (wait == NULL)
+		{
+			perror("wait");
+			exit(98);
+		}
             }
         }
 	
@@ -245,6 +256,11 @@ int main(void)
                                          else
                                          {
                                                  wait(NULL);
+						 if (wait == NULL)
+                				{
+                        				perror("wait");
+                        				exit(98);
+                				}
                                          }
 
                                          free(path_command);
