@@ -155,7 +155,7 @@ int main(void)
             }
         }
 	
-        if (input_command[0] != '/')
+        if (input_command[0] != '/' && (_strcmp(argv[0], "exit")) != 0 && (_strcmp(argv[0], "cd")) != 0 && (_strcmp(argv[0], "env")) != 0)
                 {
                        for (x = 0; x < path_index; x++)
                        {
