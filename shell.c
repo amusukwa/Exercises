@@ -61,12 +61,14 @@ int main(void)
 			free(storage_buff);
 			exit(1);
 		}
-	        else 
+	        
+		  else
 		{
 			wait(NULL);
 		}
 	}
 	free(storage_buff);
 	return (0);
-	
+
 }
+
