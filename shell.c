@@ -2,31 +2,64 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#define MAX_COMMAND_LENGTH 1024
 
 /**
  * main - simple shell function
  * Return: 0 on success
  */
-int main(void)
+int main(int argc, char* argv[])
 {
+	FILE* file;
+	 char command[MAX_COMMAND_LENGTH];
+	if (argc != 2) {
+        printf("Usage: %s [filename]\n", argv[0]);
+        return 1;
+    }
+
+    
+   if  ((isatty(STDIN_FILENO)) != 1) {
+       
+         file = fopen(argv[1], "r");
+        if (file == NULL) {
+            printf("Failed to open file: %s\n", argv[1]);
+            return 1;
+        }
+
+        
+        while (fgets(command, sizeof(command), file) != NULL) {
+            
+            command[strcspn(command, "\n")] = '\0';
+
+          execute_command(command);
+            
+        }
+
+        fclose(file);
+        return 0;
+    }
+
+    if ((isatty(STDIN_FILENO)) == 1)
+{
+
     pid_t id;
-/*    pid_t id_1;
- */
+    pid_t id_1;
     const char *prompt_str;
     int count;
     size_t buff_size = 1024;
     ssize_t line_length;
-    int value;
+    int value, value_1, x;
     char *storage_buff = NULL;
     char input_command[BUFF_SIZE];
     char *argv[MAX_VALUE];
     char *token;
     char **environment;
-   /* char *path, *path_token;
+    char *path, *path_token;
     char *path_command;
     int path_index = 0;
     char *path_array[MAX_VALUE];
-*/
+
+
 
     while (1)
     {
@@ -62,7 +95,7 @@ int main(void)
         }
         argv[count] = NULL;
 
-	/*path = getpath();
+	path = getpath();
                         path_token = strtok(path, ":");
                         while (path_token != NULL)
                         {
@@ -70,7 +103,7 @@ int main(void)
                                 path_index++;
                                 path_token = strtok(NULL, ":");
                         }
-                        path_array[path_index] = NULL;*/
+                        path_array[path_index] = NULL;
 
 
         if ((_strcmp(argv[0], "env")) == 0)
@@ -102,7 +135,7 @@ int main(void)
             }
         }
 
-/*        if (_strcmp(argv[0], "setenv") == 0)
+        if (_strcmp(argv[0], "setenv") == 0)
         {
             if (count == 3)
             {
@@ -141,7 +174,7 @@ int main(void)
                 perror("usage: cd [directory]");
             }
             continue;
-        }*/
+        }
 
         if (input_command[0] == '/')
         {
@@ -168,7 +201,7 @@ int main(void)
             }
         }
 	
-        /*if (input_command[0] != '/' && (_strcmp(argv[0], "exit")) != 0 && (_strcmp(argv[0], "cd")) != 0 && (_strcmp(argv[0], "env")) != 0)
+        if (input_command[0] != '/' && (_strcmp(argv[0], "exit")) != 0 && (_strcmp(argv[0], "cd")) != 0 && (_strcmp(argv[0], "env")) != 0)
                 {
                        for (x = 0; x < path_index; x++)
                        {
@@ -202,8 +235,9 @@ int main(void)
                 
                  
                 }
-        */
+        
     }
+}
 
     return (0);
 }
