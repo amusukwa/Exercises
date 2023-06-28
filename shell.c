@@ -10,22 +10,23 @@
 int main(void)
 {
     pid_t id;
-    pid_t id_1;
+/*    pid_t id_1;
+ */
     const char *prompt_str;
     int count;
     size_t buff_size = 1024;
     ssize_t line_length;
-    int value, value_1, x;
+    int value;
     char *storage_buff = NULL;
     char input_command[BUFF_SIZE];
     char *argv[MAX_VALUE];
     char *token;
     char **environment;
-    char *path, *path_token;
+   /* char *path, *path_token;
     char *path_command;
     int path_index = 0;
     char *path_array[MAX_VALUE];
-
+*/
 
     while (1)
     {
@@ -33,7 +34,7 @@ int main(void)
 
         prompt_str = "$ ";
         print_prompt(prompt_str);
-        line_length = my_getline(&storage_buff, &buff_size, stdin);
+        line_length = getline(&storage_buff, &buff_size, stdin);
         if (line_length == -1)
         {
 		perror("input");
@@ -61,7 +62,7 @@ int main(void)
         }
         argv[count] = NULL;
 
-	path = getpath();
+	/*path = getpath();
                         path_token = strtok(path, ":");
                         while (path_token != NULL)
                         {
@@ -69,7 +70,7 @@ int main(void)
                                 path_index++;
                                 path_token = strtok(NULL, ":");
                         }
-                        path_array[path_index] = NULL;
+                        path_array[path_index] = NULL;*/
 
 
         if ((_strcmp(argv[0], "env")) == 0)
@@ -101,7 +102,7 @@ int main(void)
             }
         }
 
-        if (_strcmp(argv[0], "setenv") == 0)
+/*        if (_strcmp(argv[0], "setenv") == 0)
         {
             if (count == 3)
             {
@@ -140,7 +141,7 @@ int main(void)
                 perror("usage: cd [directory]");
             }
             continue;
-        }
+        }*/
 
         if (input_command[0] == '/')
         {
@@ -167,7 +168,7 @@ int main(void)
             }
         }
 	
-        if (input_command[0] != '/' && (_strcmp(argv[0], "exit")) != 0 && (_strcmp(argv[0], "cd")) != 0 && (_strcmp(argv[0], "env")) != 0)
+        /*if (input_command[0] != '/' && (_strcmp(argv[0], "exit")) != 0 && (_strcmp(argv[0], "cd")) != 0 && (_strcmp(argv[0], "env")) != 0)
                 {
                        for (x = 0; x < path_index; x++)
                        {
@@ -201,7 +202,7 @@ int main(void)
                 
                  
                 }
-        
+        */
     }
 
     return (0);
