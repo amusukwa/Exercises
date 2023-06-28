@@ -9,71 +9,6 @@
  */
 int main(void)
 {
-<<<<<<< HEAD
-	pid_t id;
-	const char *prompt_str;
-	int count;
-	size_t buff_size = 1024;
-	ssize_t line_length;
-	int value;
-	char *storage_buff = NULL;
-	char input_command[BUFF_SIZE];
-	char *argv[MAX_VALUE];
-	char *token;
-
-	while (1)
-	{
-		count = 0;
-		
-		prompt_str = "$ ";
-		print_prompt(prompt_str);
-		line_length = getline(&storage_buff, &buff_size, stdin);
-		if (line_length == -1)
-		{
-			_putchar('\n');
-			break;
-		}
-		_strcpy(input_command, storage_buff);
-
-		token = strtok(input_command, " ");
-		while (token != NULL && count < MAX_VALUE - 1)
-		{
-			argv[count++] = token;
-			token = strtok(NULL, " ");
-		}
-		argv[count] = NULL;
-
-		if ((_strcmp(argv[0], "exit")) == 0)
-			exit(0);
-
-		id = fork();
-
-		if (id < 0)
-		{
-			perror("unsuccessful fork");
-			exit(1);
-		}
-		else if (id == 0)
-		{
-			value = execve(argv[0], argv, environ);
-			if (value == -1)
-			{
-				perror("Error opening file");
-				exit(1);
-			}
-			free(storage_buff);
-			exit(1);
-		}
-	        
-		  else
-		{
-			wait(NULL);
-		}
-	}
-	free(storage_buff);
-	return (0);
-
-=======
     pid_t id;
     pid_t id_1;
     const char *prompt_str;
@@ -101,9 +36,15 @@ int main(void)
         line_length = my_getline(&storage_buff, &buff_size, stdin);
         if (line_length == -1)
         {
+		perror("input");
             _putchar('\n');
             break;
         }
+	if (line_length == 1)
+	{
+		perror("Empty input");
+		continue;
+	}
         _strcpy(input_command, storage_buff);
 
 	if (input_command == NULL)
@@ -223,11 +164,6 @@ int main(void)
             else
             {
                 wait(NULL);
-		if (wait == NULL)
-		{
-			perror("wait");
-			exit(98);
-		}
             }
         }
 	
@@ -256,11 +192,6 @@ int main(void)
                                          else
                                          {
                                                  wait(NULL);
-						 if (wait == NULL)
-                				{
-                        				perror("wait");
-                        				exit(98);
-                				}
                                          }
 
                                          free(path_command);
@@ -274,6 +205,5 @@ int main(void)
     }
 
     return (0);
->>>>>>> 78310c500ea353ef99c6238ea9ed954aeb054c11
 }
 
