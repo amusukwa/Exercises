@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 #define MAX_COMMAND_LENGTH 1024
 
 /**
@@ -17,23 +18,36 @@ int main(int argc, char* argv[])
 
 	FILE* file;
 	char* line = NULL;
+	int file_descriptor;
         size_t line_length = 0;
         ssize_t read;
-
 	
 	if (argc != 2)
 	{
 	handle_error("Usage:  [filename]");
 	return (1);
 	}
-	if  (!(isatty(STDIN_FILENO)))
+        
+	 file_descriptor = open(argv[1], O_RDONLY);
+        if (file_descriptor == -1)
 	{
-	file = fopen(argv[1], "r");
+            _puts("Failed to open file:");
+            return 1;
+        }
+	
+	file = fdopen(file_descriptor, "r");
+        if (file == NULL)
+	{
+            _puts("Failed to open file");
+            close(file_descriptor);
+            return 1;
+        }
+	/**file = fopen(argv[1], "r");
 	if (file == NULL)
 	{
-	printf("Failed to open file: %s\n", argv[1]);
+	_puts("Failed to open file:", argv[1]);
 	return (1);
-	}
+	}*/
 	while ((read = my_getline(&line, &line_length, file)) != -1)
 	{
             if (line[read - 1] == '\n')
@@ -43,15 +57,17 @@ int main(int argc, char* argv[])
             }
 	}
 
-
-        fclose(file);
+	free(line);
+        close(file_descriptor);
+        /*fclose(file);*/
         return 0;
 	}
-	}
+
 
     
    else
-   {    
+   {
+
    /* Interactive mode */
 
     const char *prompt_str;
@@ -68,7 +84,6 @@ int main(int argc, char* argv[])
     char *path_command;
     int path_index = 0;
     char *path_array[MAX_VALUE];
-    /*int is_interactive = isatty(STDIN_FILENO);*/
 
 
 
@@ -107,15 +122,17 @@ int main(int argc, char* argv[])
         argv[count] = NULL;
 
 	path = getpath();
-                        path_token = strtok(path, ":");
-                        while (path_token != NULL)
-                        {
-                                path_array[path_index] = path_token;
-                                path_index++;
-                                path_token = strtok(NULL, ":");
-                        }
-                        path_array[path_index] = NULL;
+        path_token = strtok(path, ":");
+        
+	while (path_token != NULL)
+         {
+            path_array[path_index] = path_token;
+            path_index++;
+            path_token = strtok(NULL, ":");
+            }
+          path_array[path_index] = NULL;
 
+	/* handle environment */
 
         if ((_strcmp(argv[0], "env")) == 0)
         {
@@ -189,6 +206,7 @@ int main(int argc, char* argv[])
 
         if (input_command[0] == '/')
         {
+	/* Child processes */
             id = fork();
 
             if (id < 0)
@@ -208,6 +226,7 @@ int main(int argc, char* argv[])
             }
             else
             {
+	    /* parent process */
                 wait(NULL);
             }
         }
