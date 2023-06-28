@@ -12,13 +12,16 @@ int main(int argc, char* argv[])
 {
 	FILE* file;
 	 char command[MAX_COMMAND_LENGTH];
+	 pid_t id;
+	  pid_t id_1;
 	if (argc != 2) {
         printf("Usage: %s [filename]\n", argv[0]);
         return 1;
     }
 
     
-   if  ((isatty(STDIN_FILENO)) != 1) {
+   if  (!(isatty(STDIN_FILENO)))
+   {
        
          file = fopen(argv[1], "r");
         if (file == NULL) {
@@ -39,11 +42,9 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    if ((isatty(STDIN_FILENO)) == 1)
-{
-
-    pid_t id;
-    pid_t id_1;
+    
+   else
+   {    
     const char *prompt_str;
     int count;
     size_t buff_size = 1024;
@@ -237,7 +238,7 @@ int main(int argc, char* argv[])
                 }
         
     }
-}
+   }
 
     return (0);
 }
