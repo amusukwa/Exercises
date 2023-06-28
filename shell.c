@@ -10,41 +10,50 @@
  */
 int main(int argc, char* argv[])
 {
-	FILE* file;
-	 char command[MAX_COMMAND_LENGTH];
 	 pid_t id;
-	  pid_t id_1;
-	if (argc != 2) {
-        printf("Usage: %s [filename]\n", argv[0]);
-        return 1;
-    }
+	 pid_t id_1;
+	if (argc > 1)
+	{
 
-    
-   if  (!(isatty(STDIN_FILENO)))
-   {
-       
-         file = fopen(argv[1], "r");
-        if (file == NULL) {
-            printf("Failed to open file: %s\n", argv[1]);
-            return 1;
-        }
+	FILE* file;
+	char* line = NULL;
+        size_t line_length = 0;
+        ssize_t read;
 
-        
-        while (fgets(command, sizeof(command), file) != NULL) {
-            
-            command[strcspn(command, "\n")] = '\0';
+	
+	if (argc != 2)
+	{
+	handle_error("Usage:  [filename]");
+	return (1);
+	}
+	if  (!(isatty(STDIN_FILENO)))
+	{
+	file = fopen(argv[1], "r");
+	if (file == NULL)
+	{
+	printf("Failed to open file: %s\n", argv[1]);
+	return (1);
+	}
+	while ((read = my_getline(&line, &line_length, file)) != -1)
+	{
+            if (line[read - 1] == '\n')
+	    {
+                line[read - 1] = '\0';
+		execute_command(line);
+            }
+	}
 
-          execute_command(command);
-            
-        }
 
         fclose(file);
         return 0;
-    }
+	}
+	}
 
     
    else
    {    
+   /* Interactive mode */
+
     const char *prompt_str;
     int count;
     size_t buff_size = 1024;
@@ -59,6 +68,7 @@ int main(int argc, char* argv[])
     char *path_command;
     int path_index = 0;
     char *path_array[MAX_VALUE];
+    /*int is_interactive = isatty(STDIN_FILENO);*/
 
 
 
