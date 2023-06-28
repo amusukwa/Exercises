@@ -49,7 +49,7 @@ int main(void)
         }
         argv[count] = NULL;
 
-	path = getpath();
+        path = getpath();
                         path_token = strtok(path, ":");
                         while (path_token != NULL)
                         {
@@ -60,7 +60,7 @@ int main(void)
                         path_array[path_index] = NULL;
 
 
-	//start of built in commands
+        //start of built in commands
 
         if ((_strcmp(argv[0], "env")) == 0)
         {
@@ -131,8 +131,8 @@ int main(void)
             }
             continue;
         }
-	//nd of built in commands
-	
+        //nd of built in commands
+
 //start of path specified commands
         if (input_command[0] == '/')
         {
@@ -158,7 +158,7 @@ int main(void)
                 wait(NULL);
             }
         }
-	//end of path specified commands
+        //end of path specified commands
         if (input_command[0] != '/')
                 {
                        for (int x = 0; x < path_index; x++)
@@ -194,7 +194,7 @@ int main(void)
                  
                 }
  
-	    //end of no path
+            //end of no path
 
             if (!command_flag)
                 perror("Command not found");
