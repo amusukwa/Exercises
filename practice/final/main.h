@@ -24,7 +24,7 @@ char *gethome(void);
 void print_prompt(const char *str);
 ssize_t my_getline(char **lineptr, size_t *n, FILE *stream);
 char *mystrtok(char *str, const char *delim);
-int _atoi(char *s);
+int _atoi(const char *s);
 void handle_cd(const char *directory); 
 void handle_setenv(const char *variable, const char *value,int overwrite); 
 void handle_unsetenv(const char *variable); 
@@ -33,4 +33,6 @@ char *get_current_directory(void);
 void replace_variables(char *command, int status, pid_t pid);
 void _puts(const char *str);
 int _strlen(char *s);
+void handle_error(const char *message);
+void handle_exit(char **argv, int count);
 #endif

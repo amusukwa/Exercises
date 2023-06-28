@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 /**
- * main - simple shell function
+ * main - Simple shell function
  * Return: 0 on success
  */
 int main(void)
@@ -15,7 +15,7 @@ int main(void)
     int count;
     size_t buff_size = 1024;
     ssize_t line_length;
-    int value, command_flag, value_1;
+    int value, value_1, x;
     char *storage_buff = NULL;
     char input_command[BUFF_SIZE];
     char *argv[MAX_VALUE];
@@ -26,21 +26,29 @@ int main(void)
     int path_index = 0;
     char *path_array[MAX_VALUE];
 
-
     while (1)
     {
         count = 0;
-
         prompt_str = "$ ";
         print_prompt(prompt_str);
         line_length = my_getline(&storage_buff, &buff_size, stdin);
         if (line_length == -1)
         {
+            perror("input");
             _putchar('\n');
             break;
         }
+        if (line_length == 1)
+        {
+            perror("Empty input");
+            continue;
+        }
         _strcpy(input_command, storage_buff);
-
+        if (input_command == NULL)
+        {
+            perror("No command found");
+            exit(98);
+        }
         token = strtok(input_command, " ");
         while (token != NULL && count < MAX_VALUE - 1)
         {
@@ -50,18 +58,16 @@ int main(void)
         argv[count] = NULL;
 
         path = getpath();
-                        path_token = strtok(path, ":");
-                        while (path_token != NULL)
-                        {
-                                path_array[path_index] = path_token;
-                                path_index++;
-                                path_token = strtok(NULL, ":");
-                        }
-                        path_array[path_index] = NULL;
-
-
-        //start of built in commands
-
+        path_token = strtok(path, ":");
+        while (path_token != NULL)
+        {
+            path_array[path_index] = path_token;
+            path_index++;
+            path_token = strtok(NULL, ":");
+        }
+        path_array[path_index] = NULL;
+	
+       	/* Print environment variables */
         if ((_strcmp(argv[0], "env")) == 0)
         {
             environment = environ;
@@ -73,22 +79,8 @@ int main(void)
             }
             continue;
         }
-
-        if ((_strcmp(argv[0], "exit")) == 0)
-        {
-            if (count == 1)
-            {
-                exit(0);
-            }
-            else if (count == 2)
-            {
-                int exitStatus = _atoi(argv[1]);
-                exit(exitStatus);
-            }
-            else
-            {
-                perror("usage: exit status");
-            }
+	if (_strcmp(argv[0], "exit") == 0) {
+            handle_exit(argv, count);
         }
 
         if (_strcmp(argv[0], "setenv") == 0)
@@ -131,16 +123,18 @@ int main(void)
             }
             continue;
         }
-        //nd of built in commands
 
-//start of path specified commands
         if (input_command[0] == '/')
-        {
-            id = fork();
+        { 
+	
+	/* Handle fork processes */
+            
+	    id = fork();
 
             if (id < 0)
             {
-                perror("unsuccessful fork");
+          
+	        handle_error("unsuccessful fork");
                 exit(1);
             }
             else if (id == 0)
@@ -148,59 +142,51 @@ int main(void)
                 value = execve(argv[0], argv, environ);
                 if (value == -1)
                 {
-                    perror("Error opening file");
+	            handle_error("Error opening file");
                     free(storage_buff);
                     exit(1);
                 }
             }
             else
             {
+		/* Parent process */
                 wait(NULL);
             }
         }
-        //end of path specified commands
-        if (input_command[0] != '/')
+
+        if (input_command[0] != '/' && (_strcmp(argv[0], "exit")) != 0 && (_strcmp(argv[0], "cd")) != 0 && (_strcmp(argv[0], "env")) != 0)
+        {
+            for (x = 0; x < path_index; x++)
+            {
+                path_command = str_concat(path_array[x], argv[0]);
+                if (access(path_command, X_OK) == 0)
                 {
-                       for (int x = 0; x < path_index; x++)
-                       {
-                               path_command = str_concat(path_array[x], argv[0]);
-                               if (access(path_command, X_OK) == 0)
-                               {
-                                       id_1 = fork();
-                                         if (id_1 < 0)
-                                         {
-                                                perror("unsuccessful fork");
-                                                exit(1);
-                                         }
-                                        else if (id_1 == 0)
-                                     {
-                                                value_1 = execve(path_command, argv, environ);
-                                                if (value_1 == -1)
-                                                {
-                                                        perror("Error opening file");
-                                                        exit(1);
-                                                }
-                                        }
-                                         else
-                                         {
-                                                 wait(NULL);
-                                         }
-
-                                         free(path_command);
-                                         break;
+                    id_1 = fork();
+                    if (id_1 < 0)
+                    {
+                        perror("unsuccessful fork");
+                        exit(1);
                     }
-                            }
-                
-                 
+                    else if (id_1 == 0)
+                    {
+                        value_1 = execve(path_command, argv, environ);
+                        if (value_1 == -1)
+                        {
+                            perror("Error opening file");
+                            exit(1);
+                        }
+                    }
+                    else
+                    {
+                        wait(NULL);
+                    }
+                    free(path_command);
+                    break;
                 }
- 
-            //end of no path
-
-            if (!command_flag)
-                perror("Command not found");
-        
-    }//while loop
-
+            }
+        }
+    }
     return (0);
 }
+
 

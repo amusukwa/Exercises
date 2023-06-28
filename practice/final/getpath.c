@@ -2,7 +2,6 @@
 #include "string.h"
 /**
 * getpath - gets path environment variable
-* @str: string containing path
 * Return: pointer to path
 */
 char *getpath(void)
