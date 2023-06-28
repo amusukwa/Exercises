@@ -35,5 +35,4 @@ combined_str[len_str1 + 1 + i] = s2[i];
 }
 combined_str[len_str1 + len_str2 + 1] = '\0';
 return (combined_str);
-free(combined_str);
 }
