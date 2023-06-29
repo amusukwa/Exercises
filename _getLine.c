@@ -54,7 +54,7 @@ if (ch == '\n')
 break;
 }
 }
- if (line_length == 1 && ch != '\n')
+if (line_length == 1 && ch != '\n')
     {
         return (0);
     }

@@ -9,37 +9,49 @@
  */
 int main(void)
 {
-    pid_t id;
-    pid_t id_1;
-    const char *prompt_str;
-    int count;
-    size_t buff_size = 1024;
-    ssize_t line_length;
-    int value, command_flag, value_1;
-    char *storage_buff = NULL;
-    char input_command[BUFF_SIZE];
-    char *argv[MAX_VALUE];
-    char *token;
-    char **environment;
-    char *path, *path_token;
-    char *path_command;
-    int path_index = 0;
-    char *path_array[MAX_VALUE];
-
-
-    while (1)
-    {
-        count = 0;
-
-        prompt_str = "$ ";
-        print_prompt(prompt_str);
-        line_length = my_getline(&storage_buff, &buff_size, stdin);
-        if (line_length == -1)
-        {
+	/*
+	pid_t id;
+	pid_t id_1;
+	*/
+	const char *prompt_str;
+	int count;
+	size_t buff_size = 1024;
+	ssize_t line_length;
+	int value;
+	char *storage_buff = NULL;
+	char input_command[BUFF_SIZE];
+	char *argv[MAX_VALUE];
+	char *token;
+	char **environment;
+	/* char *path, *path_token;
+	 * char *path_command;
+	 * int path_index = 0;
+	 * char *path_array[MAX_VALUE];
+*/
+	while (1)
+	{
+	count = 0;
+	prompt_str = "$ ";
+	print_prompt(prompt_str);
+	line_length = getline(&storage_buff, &buff_size, stdin);
+	if (line_length == -1)
+	{
+		perror("input");
             _putchar('\n');
             break;
         }
+	if (line_length == 1)
+	{
+		perror("Empty input");
+		continue;
+	}
         _strcpy(input_command, storage_buff);
+
+	if (input_command == NULL)
+	{
+		perror("No command found");
+		exit(98);
+	}
 
         token = strtok(input_command, " ");
         while (token != NULL && count < MAX_VALUE - 1)
@@ -49,7 +61,7 @@ int main(void)
         }
         argv[count] = NULL;
 
-	path = getpath();
+	/*path = getpath();
                         path_token = strtok(path, ":");
                         while (path_token != NULL)
                         {
@@ -57,10 +69,8 @@ int main(void)
                                 path_index++;
                                 path_token = strtok(NULL, ":");
                         }
-                        path_array[path_index] = NULL;
+                        path_array[path_index] = NULL;*/
 
-
-	//start of built in commands
 
         if ((_strcmp(argv[0], "env")) == 0)
         {
@@ -91,7 +101,7 @@ int main(void)
             }
         }
 
-        if (_strcmp(argv[0], "setenv") == 0)
+/*        if (_strcmp(argv[0], "setenv") == 0)
         {
             if (count == 3)
             {
@@ -130,10 +140,8 @@ int main(void)
                 perror("usage: cd [directory]");
             }
             continue;
-        }
-	//nd of built in commands
-	
-//start of path specified commands
+        }*/
+
         if (input_command[0] == '/')
         {
             id = fork();
@@ -158,10 +166,10 @@ int main(void)
                 wait(NULL);
             }
         }
-	//end of path specified commands
-        if (input_command[0] != '/')
+	
+        /*if (input_command[0] != '/' && (_strcmp(argv[0], "exit")) != 0 && (_strcmp(argv[0], "cd")) != 0 && (_strcmp(argv[0], "env")) != 0)
                 {
-                       for (int x = 0; x < path_index; x++)
+                       for (x = 0; x < path_index; x++)
                        {
                                path_command = str_concat(path_array[x], argv[0]);
                                if (access(path_command, X_OK) == 0)
@@ -193,14 +201,11 @@ int main(void)
                 
                  
                 }
- 
-	    //end of no path
-
-            if (!command_flag)
-                perror("Command not found");
-        
-    }//while loop
+        */
+    }
 
     return (0);
 }
+
+
 

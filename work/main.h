@@ -21,4 +21,5 @@ char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int _putchar(char c);
 void print_prompt(const char *str);
+char *buffer_function(char *filename);
 #endif
