@@ -42,12 +42,7 @@ int main(int argc, char* argv[])
             close(file_descriptor);
             return 1;
         }
-	/**file = fopen(argv[1], "r");
-	if (file == NULL)
-	{
-	_puts("Failed to open file:", argv[1]);
-	return (1);
-	}*/
+
 	while ((read = my_getline(&line, &line_length, file)) != -1)
 	{
             if (line[read - 1] == '\n')
@@ -59,7 +54,6 @@ int main(int argc, char* argv[])
 
 	free(line);
         close(file_descriptor);
-        /*fclose(file);*/
         return 0;
 	}
 
@@ -96,7 +90,7 @@ int main(int argc, char* argv[])
         line_length = getline(&storage_buff, &buff_size, stdin);
         if (line_length == -1)
         {
-		perror("input");
+	/**	perror("input");*/
             _putchar('\n');
             break;
         }
@@ -271,4 +265,5 @@ int main(int argc, char* argv[])
 
     return (0);
 }
+
 
