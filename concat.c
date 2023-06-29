@@ -24,7 +24,8 @@ len_str2++;
 }
 combined_str = malloc((len_str1 + len_str2 + 2) * sizeof(char));
 if (combined_str == NULL)
-{ 
+{
+       free(combined_str);	
 	return NULL;
 }
 
@@ -39,4 +40,5 @@ combined_str[len_str1 + 1 + i] = s2[i];
 }
 combined_str[len_str1 + len_str2 + 1] = '\0';
 return (combined_str);
+free(combined_str);
 }

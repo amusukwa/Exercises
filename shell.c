@@ -233,7 +233,7 @@ int main(int argc, char* argv[])
         if (input_command[0] != '/' && (_strcmp(argv[0], "exit")) != 0 && (_strcmp(argv[0], "cd")) != 0 && (_strcmp(argv[0], "env")) != 0)
                 {
                        for (x = 0; x < path_index; x++)
-                       {
+                  {
                                path_command = str_concat(path_array[x], argv[0]);
 			       
                                if (access(path_command, X_OK) == 0)
@@ -259,8 +259,9 @@ int main(int argc, char* argv[])
 						
                                         }
                                          else
-                                         {
+                                       {
                                                  wait(NULL);
+						 free(path_command);
                                          }
 					
                                          
@@ -269,12 +270,12 @@ int main(int argc, char* argv[])
 			     free(path_command);
 			       
                             }
-		     free(path_command); 
                 
                  
                 }
-	   
+
     }
+    
    }
 return (0);
 }
