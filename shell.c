@@ -14,8 +14,6 @@ int main(int argc, char* argv[])
 
     pid_t id, id_1;
 
-	 pid_t id;
-	 pid_t id_1;
 	if (argc > 1)
 	{
 
@@ -125,7 +123,7 @@ int main(int argc, char* argv[])
                                 path_index++;
                                 path_token = strtok(NULL, ":");
                         }
-                        path_array[path_index] = NULL
+                        path_array[path_index] = NULL;
 
 	/* handle environment */
 
@@ -197,6 +195,7 @@ int main(int argc, char* argv[])
                 perror("usage: cd [directory]");
             }
             continue;
+	}
 
         if (input_command[0] == '/')
         {
@@ -262,7 +261,7 @@ int main(int argc, char* argv[])
                 
                  
                 }
-        
+	   
     }
    }
 
