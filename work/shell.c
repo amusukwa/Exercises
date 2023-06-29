@@ -1,5 +1,5 @@
 #include "main.h"
-int main(void)
+int main(int argc, char **argv)
 {
         pid_t id;
 	pid_t id_1;
@@ -18,6 +18,8 @@ int main(void)
         char *path_command;
         int path_index = 0;
         char *path_array[MAX_VALUE];
+if (argc != 2)
+{
 
         while (1)
         {
@@ -147,6 +149,11 @@ int main(void)
 		}
 
                 }//while loop closing brace
+}
+if (argc == 2)
+{
+
+}
 
         return (0);
 }

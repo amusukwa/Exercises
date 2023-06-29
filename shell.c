@@ -11,8 +11,9 @@
  */
 int main(int argc, char* argv[])
 {
-	 pid_t id;
-	 pid_t id_1;
+
+    pid_t id, id_1;
+
 	if (argc > 1)
 	{
 
@@ -79,8 +80,6 @@ int main(int argc, char* argv[])
     int path_index = 0;
     char *path_array[MAX_VALUE];
 
-
-
     while (1)
     {
         count = 0;
@@ -127,7 +126,7 @@ int main(int argc, char* argv[])
             }
 	/**	free(path);*/
 
-          path_array[path_index] = NULL;
+        path_array[path_index] = NULL;
 
 	/* handle environment */
 
@@ -199,7 +198,7 @@ int main(int argc, char* argv[])
                 perror("usage: cd [directory]");
             }
             continue;
-        }
+	}
 
         if (input_command[0] == '/')
         {
@@ -233,6 +232,7 @@ int main(int argc, char* argv[])
                        for (x = 0; x < path_index; x++)
                        {
                                path_command = str_concat(path_array[x], argv[0]);
+			       
                                if (access(path_command, X_OK) == 0)
                                {
                                        id_1 = fork();
@@ -249,20 +249,22 @@ int main(int argc, char* argv[])
                                                         perror("Error opening file");
                                                         exit(1);
                                                 }
+						
                                         }
                                          else
                                          {
                                                  wait(NULL);
                                          }
-
-                                         free(path_command);
+					
+                                         
                                          break;
                     }
+			       free(path_command);
                             }
                 
                  
                 }
-        
+	   
     }
    }
 
