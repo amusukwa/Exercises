@@ -84,16 +84,17 @@ int main(int argc, char* argv[])
     while (1)
     {
         count = 0;
-
-        prompt_str = "$ ";
-        print_prompt(prompt_str);
-        line_length = getline(&storage_buff, &buff_size, stdin);
-        if (line_length == -1)
-        {
+	
+	prompt_str = "$ ";
+	print_prompt(prompt_str);
+	line_length = getline(&storage_buff, &buff_size, stdin);
+	
+	if (line_length == -1)
+	{
 	/**	perror("input");*/
             _putchar('\n');
-            break;
-        }
+	    break;
+	}
 	if (line_length == 1)
 	{
 		perror("Empty input");
@@ -120,10 +121,12 @@ int main(int argc, char* argv[])
         
 	while (path_token != NULL)
          {
-            path_array[path_index] = path_token;
-            path_index++;
-            path_token = strtok(NULL, ":");
+		path_array[path_index] = path_token;
+		path_index++;
+		path_token = strtok(NULL, ":");
             }
+	/**	free(path);*/
+
           path_array[path_index] = NULL;
 
 	/* handle environment */

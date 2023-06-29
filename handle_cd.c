@@ -10,30 +10,30 @@
 
 void handle_cd(const char *directory)
 {
-    char *new_directory, *previous_directory;
+char *new_directory, *previous_directory;
 
-    if (directory == NULL || directory[0] == '\0' || _strcmp(directory, "~") == 0)
-    {
-        new_directory = (char *)gethome();
-        if (new_directory == NULL)
-        {
-            perror("cd: no $HOME directory");
-            return;
-        }
-    }
-    else if (strcmp(directory, "-") == 0)
-    {
-        new_directory = get_old();
-        if (new_directory == NULL)
-        {
-            perror("cd: no previous directory");
-            return;
-        }
-        _putchar('\n');
-        _puts(new_directory);
-        _putchar('\n');
-    }
-    else
+if (directory == NULL || directory[0] == '\0' || _strcmp(directory, "~") == 0)
+{
+	new_directory = (char *)gethome();
+	if (new_directory == NULL)
+	{
+		perror("cd: no $HOME directory");
+		return;
+	}
+}
+else if (strcmp(directory, "-") == 0)
+{
+	new_directory = get_old();
+	if (new_directory == NULL)
+	{
+		perror("cd: no previous directory");
+		return;
+	}
+	_putchar('\n');
+	_puts(new_directory);
+	_putchar('\n');
+}
+else
     {
         new_directory = (char *)directory;
     }

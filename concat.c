@@ -23,6 +23,10 @@ while (s2[len_str2] != '\0')
 len_str2++;
 }
 combined_str = malloc((len_str1 + len_str2 + 2) * sizeof(char));
+if (combined_str == NULL)
+{ 
+	return NULL;
+}
 
 for (i = 0; i < len_str1; i++)
 {
