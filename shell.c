@@ -103,6 +103,7 @@ int main(int argc, char* argv[])
 	if (input_command == NULL)
 	{
 		perror("No command found");
+		free(storage_buff);
 		exit(98);
 	}
 
@@ -143,6 +144,7 @@ int main(int argc, char* argv[])
         {
             if (count == 1)
             {
+		free(storage_buff);
                 exit(0);
             }
             else if (count == 2)
@@ -205,6 +207,7 @@ int main(int argc, char* argv[])
             if (id < 0)
             {
                 perror("unsuccessful fork");
+		free(storage_buff);
                 exit(1);
             }
             else if (id == 0)
@@ -236,6 +239,7 @@ int main(int argc, char* argv[])
                                          if (id_1 < 0)
                                          {
                                                 perror("unsuccessful fork");
+						free(path_command);
                                                 exit(1);
                                          }
                                         else if (id_1 == 0)
@@ -244,8 +248,11 @@ int main(int argc, char* argv[])
                                                 if (value_1 == -1)
                                                 {
                                                         perror("Error opening file");
+							free(storage_buff);
+							free(path_command);
                                                         exit(1);
                                                 }
+						free(path_command);
 						
                                         }
                                          else
@@ -256,16 +263,17 @@ int main(int argc, char* argv[])
                                          
                                          break;
                     }
-			       free(path_command);
+			     free(path_command);
+			       
                             }
+		     free(path_command); 
                 
                  
                 }
 	   
     }
    }
-
-    return (0);
+return (0);
 }
 
 
