@@ -7,6 +7,8 @@
 
 /**
  * main - simple shell function
+ * @argc: argument count
+ * @argv: pointer to inline command
  * Return: 0 on success
  */
 int main(int argc, char* argv[])
@@ -218,6 +220,7 @@ int main(int argc, char* argv[])
                 value = execve(argv[0], argv, environ);
                 if (value == -1)
                 {
+		printf("when path is specified");
                     perror("Error opening file");
                     free(storage_buff);
                     exit(1);
@@ -235,6 +238,7 @@ int main(int argc, char* argv[])
                        for (x = 0; x < path_index; x++)
                   {
                                path_command = str_concat(path_array[x], argv[0]);
+		  
 			       
                                if (access(path_command, X_OK) == 0)
                                {
@@ -267,9 +271,10 @@ int main(int argc, char* argv[])
                                          
                                          break;
                     }
+			  
 			     free(path_command);
-			       
-                            }
+		}     
+		
                 
                  
                 }
