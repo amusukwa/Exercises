@@ -33,4 +33,6 @@ char *get_current_directory(void);
 void replace_variables(char *command, int status, pid_t pid);
 void _puts(const char *str);
 int _strlen(char *s);
+void execute_command(const char* command);
+void handle_error(const char *message);
 #endif

@@ -2,14 +2,71 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
+#define MAX_COMMAND_LENGTH 1024
 
 /**
  * main - simple shell function
  * Return: 0 on success
  */
-int main(void)
+int main(int argc, char* argv[])
 {
+
     pid_t id, id_1;
+
+	 pid_t id;
+	 pid_t id_1;
+	if (argc > 1)
+	{
+
+	FILE* file;
+	char* line = NULL;
+	int file_descriptor;
+        size_t line_length = 0;
+        ssize_t read;
+	
+	if (argc != 2)
+	{
+	handle_error("Usage:  [filename]");
+	return (1);
+	}
+        
+	 file_descriptor = open(argv[1], O_RDONLY);
+        if (file_descriptor == -1)
+	{
+            _puts("Failed to open file:");
+            return 1;
+        }
+	
+	file = fdopen(file_descriptor, "r");
+        if (file == NULL)
+	{
+            _puts("Failed to open file");
+            close(file_descriptor);
+            return 1;
+        }
+
+	while ((read = my_getline(&line, &line_length, file)) != -1)
+	{
+            if (line[read - 1] == '\n')
+	    {
+                line[read - 1] = '\0';
+		execute_command(line);
+            }
+	}
+
+	free(line);
+        close(file_descriptor);
+        return 0;
+	}
+
+
+    
+   else
+   {
+
+   /* Interactive mode */
+
     const char *prompt_str;
     int count;
     size_t buff_size = 1024;
@@ -34,7 +91,7 @@ int main(void)
         line_length = getline(&storage_buff, &buff_size, stdin);
         if (line_length == -1)
         {
-		perror("input");
+	/**	perror("input");*/
             _putchar('\n');
             break;
         }
@@ -60,6 +117,7 @@ int main(void)
         argv[count] = NULL;
 
 	path = getpath();
+
                         path_token = strtok(path, ":");
                         while (path_token != NULL)
                         {
@@ -67,8 +125,9 @@ int main(void)
                                 path_index++;
                                 path_token = strtok(NULL, ":");
                         }
-                        path_array[path_index] = NULL;
+                        path_array[path_index] = NULL
 
+	/* handle environment */
 
         if ((_strcmp(argv[0], "env")) == 0)
         {
@@ -138,10 +197,10 @@ int main(void)
                 perror("usage: cd [directory]");
             }
             continue;
-	}
 
         if (input_command[0] == '/')
         {
+	/* Child processes */
             id = fork();
 
             if (id < 0)
@@ -161,6 +220,7 @@ int main(void)
             }
             else
             {
+	    /* parent process */
                 wait(NULL);
             }
         }
@@ -204,7 +264,9 @@ int main(void)
                 }
         
     }
+   }
 
     return (0);
 }
+
 
