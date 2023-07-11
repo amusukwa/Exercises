@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
-#include <sys/wait.h>
+#include <sys/types.h>
 extern char **environ;
 char *getpath(void);
 int path_search(const char *str1, const char *str2, size_t count);

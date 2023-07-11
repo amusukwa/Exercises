@@ -1,3 +1,4 @@
+#include <sys/wait.h>
 
 #include "main.h"
 
