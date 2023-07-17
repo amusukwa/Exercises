@@ -1,10 +1,13 @@
 #include "main.h"
+#include "Alias.h"
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/wait.h>
 #define MAX_COMMAND_LENGTH 1024
+
+Alias *alias_list = NULL;
 
 /**
  * main - simple shell function
@@ -72,7 +75,7 @@ int main(int argc, char* argv[])
     int count;
     size_t buff_size = 1024;
     ssize_t line_length;
-    int value, value_1, x;
+    int value, value_1, x, i;
     char *storage_buff = NULL;
     char input_command[BUFF_SIZE];
     char *argv[MAX_VALUE];
@@ -82,6 +85,7 @@ int main(int argc, char* argv[])
     char *path_command;
     int path_index = 0;
     char *path_array[MAX_VALUE];
+    char *name, *alias_value;
 
     while (1)
     {
@@ -204,6 +208,33 @@ int main(int argc, char* argv[])
             }
             continue;
 	}
+	
+	 if (_strcmp(argv[0], "alias") == 0) {
+        if (count == 1)
+        {
+        print_all_aliases();
+        }
+        else {
+        for (i = 1; i < count; i++) {
+            if (strchr(argv[i], '=') != NULL)
+            {
+
+             name = strtok(argv[i], "=");
+             alias_value = strtok(NULL, "=");
+                add_alias(name, alias_value);
+            }
+            else
+            {
+             print_alias(argv[i]);
+            }
+        }
+    }
+    continue;
+    free(name);
+    free(alias_value);
+}
+
+
 
         if (input_command[0] == '/')
         {

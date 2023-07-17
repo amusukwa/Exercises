@@ -35,4 +35,11 @@ void _puts(const char *str);
 int _strlen(char *s);
 void execute_command(const char* command);
 void handle_error(const char *message);
+void exec_commands(char **commands, int num_commands);
+char *_strdup(const char *str);
+const char *_strchr(const char *str, int c);
+void print_all_aliases();
+void print_alias(const char *name);
+void add_alias(const char *name, const char *value);
+
 #endif
