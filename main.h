@@ -41,5 +41,6 @@ const char *_strchr(const char *str, int c);
 void print_all_aliases();
 void print_alias(const char *name);
 void add_alias(const char *name, const char *value);
+char *replace_variable(char *input);
 
 #endif

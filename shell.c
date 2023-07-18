@@ -86,6 +86,7 @@ int main(int argc, char* argv[])
     int path_index = 0;
     char *path_array[MAX_VALUE];
     char *name, *alias_value;
+    char *processed_input;
 
     while (1)
     {
@@ -114,6 +115,12 @@ int main(int argc, char* argv[])
 		free(storage_buff);
 		exit(98);
 	}
+	
+	processed_input = replace_variable(input_command);
+	 if (processed_input == NULL) {
+            perror("Variable replacement error");
+            continue; 
+        }
 
         token = strtok(input_command, " ");
         while (token != NULL && count < MAX_VALUE - 1)
@@ -122,6 +129,8 @@ int main(int argc, char* argv[])
             token = strtok(NULL, " ");
         }
         argv[count] = NULL;
+
+	free(processed_input);
 
 	path = getpath();
         path_token = strtok(path, ":");
