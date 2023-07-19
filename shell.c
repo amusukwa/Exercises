@@ -87,6 +87,7 @@ int main(int argc, char* argv[])
     char *path_array[MAX_VALUE];
     char *name, *alias_value;
     char *processed_input;
+    char* comment;
 
     while (1)
     {
@@ -107,6 +108,14 @@ int main(int argc, char* argv[])
 		perror("Empty input");
 		continue;
 	}
+
+	 comment = strchr(storage_buff, '#');
+      if (comment != NULL)
+      {
+        *comment = '\0';
+      }
+
+
         _strcpy(input_command, storage_buff);
 
 	if (input_command == NULL)
