@@ -38,7 +38,7 @@ int mysetenv(const char *name, const char *value)
  *  Return: Always 0
  */
 
-int _mysetenv(int argc, char argv[])
+int _mysetenv(int argc, char *argv[])
 {
 	if( argc != 3)
 	{
@@ -49,8 +49,8 @@ int _mysetenv(int argc, char argv[])
 	{
         return 0;
     } else {
-       _puts(stderr, "Failed to set environment variable\n");
-        return 1; // Failure
+       _puts( "Failed to set environment variable\n");
+        return 1; 
     }
 }
 

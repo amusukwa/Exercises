@@ -31,7 +31,7 @@ void handle_unsetenv(const char *variable);
 void update_pwd_variable(const char *new_directory);
 char *get_current_directory(void);
 void replace_variables(char *command, int status, pid_t pid);
-void _puts(const char *str);
+void _puts( char *str);
 int _strlen(char *s);
 void execute_command(const char* command);
 void handle_error(const char *message);
@@ -42,5 +42,6 @@ void print_all_aliases();
 void print_alias(const char *name);
 void add_alias(const char *name, const char *value);
 char *replace_variable(char *input);
+int mysetenv(const char *name, const char *value);
 
 #endif
